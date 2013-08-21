@@ -56,11 +56,13 @@ def get_anitas
   ####
   # Search for nodes by css
 
-  doc.css('div.specials_copy').each do |specials|
-    specials.xpath('.//p').each do |container|
-      inner_html = container.inner_html
-      # pull out the text up to the first HTML tag
-      lunch_special = inner_html[/[^\<]+/].strip!
+  if(doc)
+    doc.css('div.specials_copy').each do |specials|
+      specials.xpath('.//p').each do |container|
+        inner_text = container.content
+        # ex: "Wednesday August 21st ENTREE:  Meatball Sandwich with Pasta Salad"
+        lunch_special = inner_text.match(/^\s*(.*)\sSOUP/)[1]
+      end
     end
   end
 
@@ -68,15 +70,21 @@ def get_anitas
 
 end
 
-# the input to this method is a bit wack
+# the input to this method is a bit flexible
 # e.g. "Tuesday August 20th ENTREE:  Croque Monsieur with Pasta Salad"
 def get_updated(in_str)
+  
+  time_string = "January 1, 1969"
 
-  matches = in_str.match(/^(.*)\sENTREE:/)
+  if(in_str)
+    matches = in_str.match(/^(.*)\sENTREE:/)
+  end
 
-  in_dt = DateTime.parse(matches[1])
+  if(matches[1])
+    time_string = DateTime.parse(matches[1]).to_s
+  end
 
-  return in_dt.to_s
+  return time_string
 
 end
 
