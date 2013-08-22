@@ -61,7 +61,12 @@ def get_anitas
       specials.xpath('.//p').each do |container|
         inner_text = container.content
         # ex: "Wednesday August 21st ENTREE:  Meatball Sandwich with Pasta Salad"
-        lunch_special = inner_text.match(/^\s*(.*)\sSOUP/)[1]
+        if(inner_text)
+          matches = inner_text.match(/^\s+(.+)SOUPS:/)
+          if(matches[1])
+            lunch_special = matches[1]
+          end
+        end
       end
     end
   end
@@ -77,7 +82,7 @@ def get_updated(in_str)
   time_string = "January 1, 1969"
 
   if(in_str)
-    matches = in_str.match(/^(.*)\sENTREE:/)
+    matches = in_str.match(/^(.+)ENTREE:/)
   end
 
   if(matches[1])
