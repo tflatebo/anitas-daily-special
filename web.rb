@@ -60,10 +60,11 @@ def get_anitas
     doc.css('div.specials_copy').each do |specials|
       specials.xpath('.//p').each do |container|
         inner_text = container.content
-        # ex: "Wednesday August 21st ENTREE:  Meatball Sandwich with Pasta Salad"
+        # ex: "Monday September 3rdENTREE: Hawaiin Chicken SandwichSOUPS: Navy Bean with Ham & Tortilla Chip Chicken   WE'RE FACEBOOK OFFICIAL! www.facebook.com/anitasandtruetastes"
         if(inner_text)
-          matches = inner_text.match(/^\s+(.+)SOUPS:/)
-          if(matches[1])
+          matches = inner_text.match(/^(.+)SOUPS:/)
+
+          if(matches && matches[1])
             lunch_special = matches[1]
           end
         end
