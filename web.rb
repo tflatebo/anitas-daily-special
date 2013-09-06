@@ -3,6 +3,7 @@ require 'open-uri'
 require 'sinatra'
 require 'haml'
 require 'date'
+require 'digest/md5'
 
 class LunchSpecial
   attr_accessor :title, :url, :content
@@ -32,7 +33,7 @@ get '/atom', :provides => ['rss', 'atom', 'xml'] do
       xml.entry {
         xml.title @lunch_special.title
         xml.content @lunch_special.content
-        xml.id get_updated(@lunch_special.content)
+        xml.id Digest::MD5.hexdigest(@lunch_special.content)
         xml.updated get_updated(@lunch_special.content)
         xml.link('href' => @lunch_special.url)
       }
@@ -66,6 +67,11 @@ def get_anitas
 
           if(matches && matches[1])
             lunch_special = matches[1]
+            need_space = lunch_special.match(/^(.*[^\s])(ENTREE.*)/)
+            if(need_space)
+              puts "Needs space " + lunch_special   
+              lunch_special = "<strong>" + need_space[1] + "</strong><br/>" + need_space[2] + "\n"
+            end
           end
         end
       end
