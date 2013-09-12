@@ -63,13 +63,12 @@ def get_anitas
         inner_text = container.content
         # ex: "Monday September 3rdENTREE: Hawaiin Chicken SandwichSOUPS: Navy Bean with Ham & Tortilla Chip Chicken   WE'RE FACEBOOK OFFICIAL! www.facebook.com/anitasandtruetastes"
         if(inner_text)
-          matches = inner_text.match(/^(.+)SOUPS:/)
+          matches = inner_text.match(/^(.+)SOUP.{0,1}:/)
 
           if(matches && matches[1])
             lunch_special = matches[1]
             need_space = lunch_special.match(/^(.*[^\s])(ENTREE.*)/)
             if(need_space)
-              puts "Needs space " + lunch_special   
               lunch_special = "<strong>" + need_space[1] + "</strong><br/>" + need_space[2] + "\n"
             end
           end
@@ -90,10 +89,10 @@ def get_updated(in_str)
 
   if(in_str)
     matches = in_str.match(/^(.+)ENTREE:/)
-  end
 
-  if(matches[1])
-    time_string = DateTime.parse(matches[1]).to_s
+    if(matches && matches[1])
+      time_string = DateTime.parse(matches[1]).to_s
+    end
   end
 
   return time_string
