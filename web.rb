@@ -62,12 +62,13 @@ def get_anitas
       specials.xpath('.//p').each do |container|
         inner_text = container.content
         # ex: "Monday September 3rdENTREE: Hawaiin Chicken SandwichSOUPS: Navy Bean with Ham & Tortilla Chip Chicken   WE'RE FACEBOOK OFFICIAL! www.facebook.com/anitasandtruetastes"
+        puts "Inner Text: " + inner_text
         if(inner_text)
-          matches = inner_text.match(/^(.+)SOUP.{0,1}:/)
+          matches = inner_text.match(/^(.+)SOUP.{0,1}:/i)
 
           if(matches && matches[1])
             lunch_special = matches[1]
-            need_space = lunch_special.match(/^(.*[^\s])(ENTREE.*)/)
+            need_space = lunch_special.match(/^(.*[^\s])(ENTREE.*)/i)
             if(need_space)
               lunch_special = "<strong>" + need_space[1] + "</strong><br/>" + need_space[2] + "\n"
             end
@@ -88,7 +89,7 @@ def get_updated(in_str)
   time_string = "January 1, 1969"
 
   if(in_str)
-    matches = in_str.match(/^(.+)ENTREE:/)
+    matches = in_str.match(/^(.+)ENTREE:/i)
 
     if(matches && matches[1])
       time_string = DateTime.parse(matches[1]).to_s
