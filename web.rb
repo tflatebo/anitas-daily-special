@@ -34,7 +34,8 @@ get '/atom', :provides => ['rss', 'atom', 'xml'] do
       xml.entry {
         xml.title @lunch_special.title
         xml.content @lunch_special.content
-        xml.id Digest::MD5.hexdigest(@lunch_special.content)
+        #xml.id Digest::MD5.hexdigest(@lunch_special.content) 
+        xml.id Time.now.to_i
         xml.updated get_updated(@lunch_special.content)
         xml.link('href' => @lunch_special.url)
         xml.link('rel' => 'enclosure', 'href' => @lunch_special.image_uri)
@@ -79,15 +80,22 @@ end
 # e.g. "Tuesday August 20th ENTREE:  Croque Monsieur with Pasta Salad"
 def get_updated(in_str)
   
-  time_string = "January 1, 1969"
+  time_string = "January 1, 1969 CST" 
 
   if(in_str)
-    matches = in_str.match(/^(.+)ENTREE:/i)
+    matches = in_str.match(/^(.+rd)/i)
 
     if(matches && matches[1])
       time_string = DateTime.parse(matches[1]).to_s
+    else
+      matches = in_str.match(/^(.+th)/i)
+      if(matches && matches[1])
+        time_string = DateTime.parse(matches[1]).to_s
+      end
     end
   end
+
+  puts "time string: " + time_string
 
   return time_string
 
