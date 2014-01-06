@@ -4,14 +4,16 @@ require 'sinatra'
 require 'haml'
 require 'date'
 require 'digest/md5'
+require 'google-search'
 
 class LunchSpecial
-  attr_accessor :title, :url, :content
+  attr_accessor :title, :url, :content, :image_uri
 
   def initialize
     @title = "Anita's Daily Lunch Special"
     @url = 'http://www.truetastes.com/anitas-cafe-lunch-catering/'
-    @content = 'whipped potatoes'
+    @content = "I can't find their lunch special, maybe it's Whipped potatoes? Visit <a href='http://www.truetastes.com/anitas-cafe-lunch-catering/'>their site</a> if you see this message."
+    @image_uri = 'http://www.truetastes.com/wp-content/themes/anita/ui/img/special_1.jpg'
   end
 
 end
@@ -22,8 +24,7 @@ get '/', :provides => 'html' do
 end
 
 get '/atom', :provides => ['rss', 'atom', 'xml'] do
-  @lunch_special = LunchSpecial.new
-  @lunch_special.content = get_anitas
+  @lunch_special = get_anitas
 
   builder = Nokogiri::XML::Builder.new do |xml|
     xml.feed('xmlns' => 'http://www.w3.org/2005/Atom') {
@@ -36,6 +37,7 @@ get '/atom', :provides => ['rss', 'atom', 'xml'] do
         xml.id Digest::MD5.hexdigest(@lunch_special.content)
         xml.updated get_updated(@lunch_special.content)
         xml.link('href' => @lunch_special.url)
+        xml.link('rel' => 'enclosure', 'href' => @lunch_special.image_uri)
       }
     }
   end
@@ -48,10 +50,10 @@ get '/anitas' do
   return get_anitas
 end
 
+# new parsing that pulls in their HTML formatting, but we lose the date parsing
 def get_anitas
 
-  lunch_special = "Whipped potatoes"
-
+  @lunch_special = LunchSpecial.new
   doc = Nokogiri::HTML(open('http://www.truetastes.com/anitas-cafe-lunch-catering/'))
 
   ####
@@ -62,23 +64,14 @@ def get_anitas
       specials.xpath('.//p').each do |container|
         inner_text = container.content
         # ex: "Monday September 3rdENTREE: Hawaiin Chicken SandwichSOUPS: Navy Bean with Ham & Tortilla Chip Chicken   WE'RE FACEBOOK OFFICIAL! www.facebook.com/anitasandtruetastes"
-        puts "Inner Text: " + inner_text
-        if(inner_text)
-          matches = inner_text.match(/^(.+)SOUP.{0,1}:/i)
-
-          if(matches && matches[1])
-            lunch_special = matches[1]
-            need_space = lunch_special.match(/^(.*[^\s])(ENTREE.*)/i)
-            if(need_space)
-              lunch_special = "<strong>" + need_space[1] + "</strong><br/>" + need_space[2] + "\n"
-            end
-          end
-        end
+        puts "Content : " + container.content
+        puts "Inner HTML: " + container.inner_html
+        @lunch_special.content = container.inner_html
       end
     end
   end
 
-  return lunch_special
+  return @lunch_special
 
 end
 
@@ -100,3 +93,15 @@ def get_updated(in_str)
 
 end
 
+# give me back a good image for today's lunch special
+def get_relevant_image(lunch_str)
+
+  image = Google::Search::Image.new(:query => lunch_str).first
+
+  if(image)
+    return image.thumbnail_uri
+  else
+    return nil
+  end
+
+end
