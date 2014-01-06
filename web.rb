@@ -34,8 +34,7 @@ get '/atom', :provides => ['rss', 'atom', 'xml'] do
       xml.entry {
         xml.title @lunch_special.title
         xml.content @lunch_special.content
-        #xml.id Digest::MD5.hexdigest(@lunch_special.content) 
-        xml.id Time.now.to_i
+        xml.id Digest::MD5.hexdigest(@lunch_special.content) 
         xml.updated get_updated(@lunch_special.content)
         xml.link('href' => @lunch_special.url)
         xml.link('rel' => 'enclosure', 'href' => @lunch_special.image_uri)
