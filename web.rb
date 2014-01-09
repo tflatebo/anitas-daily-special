@@ -30,12 +30,11 @@ get '/atom', :provides => ['rss', 'atom', 'xml'] do
     xml.feed('xmlns' => 'http://www.w3.org/2005/Atom') {
       xml.link('href' => @lunch_special.url)
       xml.title @lunch_special.title
-      xml.updated get_updated(@lunch_special.text_content)
+      xml.updated DateTime.now.to_s
       xml.entry {
         xml.title @lunch_special.title
         xml.content @lunch_special.html_content
         xml.id Digest::MD5.hexdigest(@lunch_special.html_content) 
-        #xml.updated get_updated(@lunch_special.text_content)
         xml.updated DateTime.now.to_s
         xml.link('href' => @lunch_special.url)
         xml.link('rel' => 'enclosure', 'href' => @lunch_special.image_uri)
@@ -75,59 +74,6 @@ def get_anitas
   end
 
   return @lunch_special
-
-end
-
-# the input to this method is a bit flexible
-# e.g. "Tuesday August 20th ENTREE:  Croque Monsieur with Pasta Salad"
-# this is probably some of the worst code I have written
-# "I'll clean it up later"
-# "Yeah, right" 
-def get_updated(in_str)
-  
-  time_string = "January 1st, 1969" 
-
-  if(in_str)
-    matches = in_str.match(/^(.+rd)/i)
-
-    if(matches && matches[1])
-      # if you think this is messy, then go ahead and fix it, cant figure out how to parse 
-      # the input string in my local time zone
-      time_string =  DateTime.strptime(matches[1] + ' Central Time (US & Canada)', '%A, %B %erd %Z').to_s
-    else
-      matches = in_str.match(/^(.+th)/i)
-
-      if(matches && matches[1])
-        time_string = DateTime.parse(matches[1]).to_s
-        time_string =  DateTime.strptime(matches[1] + ' Central Time (US & Canada)', '%A, %B %eth %Z').to_s
-      else
-        matches = in_str.match(/^(.+st)/i)
-
-        if(matches && matches[1])
-          time_string = DateTime.parse(matches[1]).to_s
-          time_string =  DateTime.strptime(matches[1] + ' Central Time (US & Canada)', '%A, %B %est %Z').to_s
-        end
-      end
-    end
-  end
-
-  return time_string
-
-end
-
-# Something like this should be called from the above get_updated method,
-# but my car is ready, and I don't have any more time
-# a date string, with a specified suffix on the day, to parse in my local time zone
-def parse_my_date_string(in_date_str, suffix)
-  matches = in_str.match(/^(.+st)/i)
-
-  if(matches && matches[1])
-    time_string = DateTime.parse(matches[1]).to_s
-    puts "Selected date_str: " + matches[1]
-    time_string =  DateTime.strptime(matches[1] + ' Central Time (US & Canada)', '%A, %B %est %Z').to_s
-  end
-
-  return time_string
 
 end
 
