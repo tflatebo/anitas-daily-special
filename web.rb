@@ -63,11 +63,10 @@ def get_anitas
     doc.css('div.specials_copy').each do |specials|
       specials.xpath('.//p').each do |container|
         # inner HTML example:
-        #  <strong>Tuesday,</strong> January 7th, 2014<br><strong>Entree:</strong> Philly Cheese Steak w/ Roasted Potatoes<br><strong>Soups:</strong> Navy Bean w/ Ham &amp; Chicken Spatzel<br><br><br><br><br><br><br><br><strong>Like</strong> us on Facebook! www.facebook.com/anitasandtruetastes<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        # <h3 class="niceheader">Today's Special</h3>
+        # <p><strong>Thursday</strong> February 20th<br /><strong>Entree:</strong> Jerk Chicken Thighs with Beans and Rice<br /><strong>Soup:</strong> MN Wild Rice <br /><strong>Beef</strong> Taco Salad<br /></p> 
         html_content = container.inner_html
-        index_of_br = html_content.index('<br><br>')
-        better_html_content = html_content[0..index_of_br-1]
-        @lunch_special.html_content = better_html_content
+        @lunch_special.html_content = html_content
         @lunch_special.text_content = container.content
       end
     end
