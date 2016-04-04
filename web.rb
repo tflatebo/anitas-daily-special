@@ -4,7 +4,6 @@ require 'sinatra'
 require 'haml'
 require 'date'
 require 'digest/md5'
-require 'google-search'
 
 class LunchSpecial
   attr_accessor :title, :url, :text_content, :html_content, :image_uri
@@ -61,14 +60,8 @@ def get_anitas
 
   if(doc)
     doc.css('div.specials_copy').each do |specials|
-      specials.xpath('.//p').each do |container|
-        # inner HTML example:
-        # <h3 class="niceheader">Today's Special</h3>
-        # <p><strong>Thursday</strong> February 20th<br /><strong>Entree:</strong> Jerk Chicken Thighs with Beans and Rice<br /><strong>Soup:</strong> MN Wild Rice <br /><strong>Beef</strong> Taco Salad<br /></p> 
-        html_content = container.inner_html
-        @lunch_special.html_content = html_content
-        @lunch_special.text_content = container.content
-      end
+        @lunch_special.html_content = specials.inner_html
+        @lunch_special.text_content = specials.content
     end
   end
 
