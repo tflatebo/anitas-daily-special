@@ -23,7 +23,7 @@ To run the tests just run
 
 ```
 rake
-````
+```
 
 ## Using it
 
