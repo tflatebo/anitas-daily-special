@@ -27,7 +27,7 @@ rake
 
 ## Using it
 
-`weekly` returns an atom feed containing all the content for the current week
+`/weekly` returns an atom feed containing all the content for the current week
 
 `/daily` returns an atom feed containing just that days content. Note that Anita's doesn't provide specials for the weekend, so if this runs on Saturday or Sunday the feed will be empty.
 
