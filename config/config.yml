@@ -1,0 +1,6 @@
+url: 'http://truetastes.com/anitas-cafe/'
+title: "Anita's Daily Lunch Special"
+default_content: "I can't find their lunch special, maybe it's Whipped potatoes? Visit <a href='http://www.truetastes.com/anitas-cafe-lunch-catering/'>their site</a> if you see this message."
+image_uri: 'http://www.truetastes.com/wp-content/themes/anita/ui/img/special_1.jpg'
+#selector: '#special > div > div > div'
+selector: 'div[3].x-text.cs-ta-center'
