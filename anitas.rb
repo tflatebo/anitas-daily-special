@@ -4,7 +4,7 @@ require 'sinatra'
 require 'haml'
 require 'date'
 require 'digest/md5'
-require 'YAML'
+require 'yaml'
 require 'pry'
 
 class Anitas
