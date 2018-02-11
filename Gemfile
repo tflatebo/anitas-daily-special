@@ -6,3 +6,5 @@ gem 'rack-test'
 gem 'rspec'
 gem 'rake'
 gem 'pry'
+
+ruby '2.4.1'
