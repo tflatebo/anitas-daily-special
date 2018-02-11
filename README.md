@@ -37,6 +37,8 @@ rake
 
 I've been deploying this to heroku, works great there.
 
+Runs at https://anitas-daily-special.herokuapp.com/
+
 ## Built With
 
 * [Sinatra](http://sinatrarb.com/) - The web framework used
