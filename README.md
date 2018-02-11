@@ -1,7 +1,9 @@
-# Project Title
+# Anita's Daily Special
 
 Parse Anita's website and pull out the daily special. Obviously this is highly
 reliant on the structure of the HTML returned.
+
+http://truetastes.com/anitas-cafe/
 
 As of 2/2018, they updated their website, and are publishing a week's content
 at a time. This program will bring that list in, and give a day at a time if that
